@@ -2,10 +2,6 @@
   (:require
    [clojure.string :as string]))
 
-; what do we want after a round?
-; side effect: change score (swap!)
-; maybe a map with :output-string, :winner
-
 (def log (.-log js/console))
 
 (def choices
@@ -13,64 +9,57 @@
    1 "paper"
    2 "scissors"})
 
-(def victory-strings
+(def end-of-round-output
   {"rock" "Rock beats scissors."
    "paper" "Paper beats rock."
-   "scissors" "Scissors beats paper."})
+   "scissors" "Scissors beats paper."
+   "tie" "Tie game."
+   "error" "Invalid user input."})
+
+(defn determine-winner [player-selection winning-selection]
+  (if (= player-selection winning-selection)
+    (do
+      (log (str (get end-of-round-output winning-selection) " Player wins!"))
+      {:winner :player})
+    (do
+      (log (str (get end-of-round-output winning-selection) " Computer wins!"))
+      {:winner :computer})))
 
 (defn get-computer-choice []
   (let [n (rand-int 3)]
     (get choices n)))
 
-(defn play [player-selection computer-selection]
-  (let [ps-lowercased (string/lower-case player-selection)
-        selections (group-by :selection
-                             [{:name "Computer" :selection computer-selection}
-                              {:name "Player" :selection ps-lowercased}])
-        get-name (comp :name first)
-
-        return-winner (fn [selection]
-                        {:output-string (str (get-name (get selections selection)) " wins. " (get victory-strings selection))
-                         :winner (->> selection
-                                      (get selections)
-                                      get-name
-                                      string/lower-case
-                                      keyword)})]
+(defn play [player-selection-raw computer-selection]
+  (let [player-selection (string/lower-case player-selection-raw)]
     (cond
-      (not (seq (#{"rock" "paper" "scissors"} ps-lowercased)))
-      {:output-string "What the fuck Gordon?"
-       :winner :error}
+      (not (seq (#{"rock" "paper" "scissors"} player-selection)))
+      (do (log (get end-of-round-output "error"))
+          {:winner :error})
+      (= computer-selection player-selection)
+      (do (log (get end-of-round-output "tie"))
+          {:winner :tie})
+      (= #{player-selection computer-selection} #{"rock" "scissors"})
+      (determine-winner player-selection "rock")
+      (= #{player-selection computer-selection} #{"rock" "paper"})
+      (determine-winner player-selection "paper")
+      (= #{player-selection computer-selection} #{"paper" "scissors"})
+      (determine-winner player-selection "scissors"))))
 
-      (= (count selections) 1)
-      {:output-string "Tie Game"
-       :winner :tie}
-
-      (contains? selections "rock")
-      (if (contains? selections "paper")
-        (return-winner "paper")
-        (return-winner "rock"))
-
-      :else
-      (return-winner "scissors"))))
-
-(play "rock" (get-computer-choice))
-
-;TODO - update this to handle new output of play function
 (defn game []
-  (let [scores (atom {:computer-score 0 :player-score 0})]
-    ;TODO change to a loop recur that counts how many valid games were played my mans
-    (dotimes [_ 5]
-      (let [selection (js/prompt "Do it gordon")
-            output (play selection (get-computer-choice))]
-        (case (:winner output)
-          :computer (do
-                      (swap! scores #(update % :computer-score inc))
-                      (log (:output-string output)))
-          :player (do
-                    (swap! scores #(update % :player-score inc))
-                    (log (:output-string output)))
-          (log "Tie game"))))
-    (log (clj->js @scores))))
+  (loop [game-count 0
+         computer-score 0
+         player-score 0]
+    (if (= game-count 5)
+      (log (str "Player: " player-score ", Computer: " computer-score))
+      (case (:winner (play (js/prompt "Rock Paper Scissors") (get-computer-choice)))
+        :tie
+        (recur game-count computer-score player-score)
+        :error
+        (recur game-count computer-score player-score)
+        :player
+        (recur (inc game-count) computer-score (inc player-score))
+        :computer
+        (recur (inc game-count) (inc computer-score) player-score)))))
 
 (defn ^:export init []
   (game))
