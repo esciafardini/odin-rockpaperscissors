@@ -1,5 +1,6 @@
 (ns app.core
   (:require
+   [clojure.set :as set]
    [clojure.string :as string]))
 
 (def log (.-log js/console))
@@ -15,6 +16,47 @@
    "scissors" "Scissors beats paper."
    "tie" "Tie game."
    "error" "Invalid user input."})
+
+; rock beats scissors
+; paper beats
+
+(def test-data
+  ; how the data should/could look to simplify things
+  [{:player :computer
+    :choice "rock"}
+   {:player :user
+    :choice "rock"}])
+
+(defn new-determine
+  "If there is a winner, a map will be returned.
+   Otherwise, a keyword that signifies bad user input (:error) or a tie game (:tie)"
+  [data]
+  (let [choices (set (map :choice data))
+        valid-entry? (set/subset? choices #{"rock" "paper" "scissors"})
+        return-winner-info (fn [selection game-data]
+                             (->> game-data
+                                  (filter (comp #{selection} :choice))
+                                  first))]
+    (cond
+      (not valid-entry?) :error
+      (= 1 (count choices)) :tie
+      (= choices #{"rock" "paper"}) (return-winner-info "paper" data)
+      (= choices #{"rock" "scissors"}) (return-winner-info "rock" data)
+      (= choices #{"scissors" "paper"}) (return-winner-info "scissors" data))))
+
+(new-determine test-data)
+
+(->> test-data
+     (filter (comp #{"paper"} :choice))
+     first
+     :player)
+
+
+
+
+
+
+
 
 (defn determine-winner [player-selection winning-selection]
   (if (= player-selection winning-selection)
