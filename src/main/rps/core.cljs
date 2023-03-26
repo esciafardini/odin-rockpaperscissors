@@ -1,10 +1,8 @@
 (ns rps.core
   (:require
    [clojure.set :as set]
-   [clojure.string :as string]
+   [rps.js-helpers :refer [console-log get-element-by-id update-text-content! set-text-content!]]
    [cljs.core :as c]))
-
-(def log (.-log js/console))
 
 (def computer-choices
   {0 :rock
@@ -56,36 +54,27 @@
   (let [n (rand-int 3)]
     (get computer-choices n)))
 
-(defn play-round [user-selection]
-  (let [computer-selection (get-computer-choice!)
-        game-info {:user user-selection
+(defn play-round [user-selection computer-selection]
+  (let [game-info {:user user-selection
                    :computer computer-selection}]
     (determine-winner game-info)))
 
-(defn set-text-content! [div-id text-content]
-  (let [div (.getElementById js/document div-id)]
-    (set! (.. div -textContent) text-content)))
-
-(defn update-text-content! [div-id f]
-  (let [div (.getElementById js/document div-id)
-        current-content (.. div -textContent)]
-    (set! (.. div -textContent) (f current-content))))
-
 (def button-types ["rock" "paper" "scissors"])
 
-(defn increment!
+(defn increment
   "Since textcontent exists as string, some hoops must be jumped through..."
   [n]
   ((comp str inc int) n))
-;; Add event listeners to the rock/paper/scissors buttons
+
+;; Side Effects established here:
 (doseq [button-type button-types]
-  (.addEventListener (.getElementById js/document button-type) "click"
-                     #(let [{:keys [ui-message winner]} (play-round (keyword button-type))]
+  (.addEventListener (get-element-by-id button-type) "click"
+                     #(let [{:keys [ui-message winner]} (play-round (keyword button-type) (get-computer-choice!))]
                         (set-text-content! "ui-message" ui-message)
                         (case winner
-                          :computer (update-text-content! "computer-score" increment!)
-                          :user (update-text-content! "user-score" increment!)
+                          :computer (update-text-content! "computer-score" increment)
+                          :user (update-text-content! "user-score" increment)
                           nil))))
 
 (defn init []
-  (log "PLAY!!!"))
+  (console-log "PLAY!!!"))
