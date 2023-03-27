@@ -1,7 +1,7 @@
 (ns rps.core
   (:require
    [clojure.set :as set]
-   [rps.js-helpers :refer [console-log get-element-by-id update-text-content! set-text-content!]]
+   [rps.js-helpers :refer [console-log get-element-by-id set-text-content!]]
    [cljs.core :as c]))
 
 (def computer-choices
@@ -66,14 +66,33 @@
   [n]
   ((comp str inc int) n))
 
+(def user-score (atom 0))
+(def computer-score (atom 0))
+
+(def button-elements
+  (.querySelectorAll js/document "button"))
+
+(defn game-over []
+  (doseq [button-element button-elements]
+    (set! (.. button-element -disabled) true))
+  (set-text-content! "game-over-message" "Game over!!!!"))
+
+(defn victory-fx [a div]
+  (swap! a inc)
+  (if (= @a 5)
+    (do
+      (set-text-content! div "5 - Winner")
+      (game-over))
+    (set-text-content! div @a)))
+
 ;; Side Effects established here:
 (doseq [button-type button-types]
   (.addEventListener (get-element-by-id button-type) "click"
                      #(let [{:keys [ui-message winner]} (play-round (keyword button-type) (get-computer-choice!))]
                         (set-text-content! "ui-message" ui-message)
                         (case winner
-                          :computer (update-text-content! "computer-score" increment)
-                          :user (update-text-content! "user-score" increment)
+                          :computer (victory-fx computer-score "computer-score")
+                          :user (victory-fx user-score "user-score")
                           nil))))
 
 (defn init []
