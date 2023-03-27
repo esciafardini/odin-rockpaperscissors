@@ -50,42 +50,38 @@
       (= choices #{:scissors :paper})
       (outcome :scissors data))))
 
-(defn get-computer-choice! []
-  (let [n (rand-int 3)]
-    (get computer-choices n)))
 
 (defn play-round [user-selection computer-selection]
   (let [game-info {:user user-selection
                    :computer computer-selection}]
     (determine-winner game-info)))
 
-(def button-types ["rock" "paper" "scissors"])
-
-(defn increment
-  "Since textcontent exists as string, some hoops must be jumped through..."
-  [n]
-  ((comp str inc int) n))
+(def button-elements
+  (.querySelectorAll js/document "button"))
 
 (def user-score (atom 0))
 (def computer-score (atom 0))
 
-(def button-elements
-  (.querySelectorAll js/document "button"))
+(defn get-computer-choice! []
+  (let [n (rand-int 3)]
+    (get computer-choices n)))
 
 (defn game-over []
   (doseq [button-element button-elements]
     (set! (.. button-element -disabled) true))
   (set-text-content! "game-over-message" "Game over!!!!"))
 
-(defn victory-fx [a div]
-  (swap! a inc)
-  (if (= @a 5)
-    (do
-      (set-text-content! div "5 - Winner")
-      (game-over))
-    (set-text-content! div @a)))
 
-;; Side Effects established here:
+(defn victory-fx [score div]
+  (swap! score inc)
+  (if (= @score 5)
+    (do
+      (set-text-content! div (str @score " (Winner)"))
+      (game-over))
+    (set-text-content! div @score)))
+
+(def button-types ["rock" "paper" "scissors"])
+
 (doseq [button-type button-types]
   (.addEventListener (get-element-by-id button-type) "click"
                      #(let [{:keys [ui-message winner]} (play-round (keyword button-type) (get-computer-choice!))]
