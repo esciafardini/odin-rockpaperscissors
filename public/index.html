@@ -13,34 +13,47 @@
 
 <body>
 
-  <div class="container">
+  <div class="main-ctx">
 
-    <div class="title">
-      <h1>Rock Paper Scissors</h1>
+    <div class="left-ctx">
+      USER DISPLAY
     </div>
 
-    <div class="score-display">
+    <div class="center-ctx">
 
-      <div>Computer: </div>
-      <div id="computer-score">0</div>
+      <div>
+        <h1 class="title">ROCK PAPER SCISSORS</h1>
+        <div id="ui-message" class="ui-message">
+          you already know what it is
+        </div>
 
-      <div>User: </div>
-      <div id="user-score">0</div>
+      </div>
+
+      <div class="score-display">
+        <div class="score-box">
+          <div>Computer:</div>
+          <div id="computer-score">0</div>
+        </div>
+        <div class="score-box">
+          <div>User:</div>
+          <div id="user-score">0</div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button id="rock" type="button">Rock</button>
+        <button id="paper" type="button">Paper</button>
+        <button id="scissors" type="button">Scissors</button>
+      </div>
+
+      <div class="game-over" id="game-over-message"></div>
 
     </div>
 
-    <div id="ui-message" class="ui-message">
-      Select One...
+
+    <div class="right-ctx">
+      COMPUTER DISPLAY
     </div>
-
-
-    <div class="buttons">
-      <button id="rock" type="button">Rock</button>
-      <button id="paper" type="button">Paper</button>
-      <button id="scissors" type="button">Scissors</button>
-    </div>
-
-    <div class="game-over" id="game-over-message"></div>
 
   </div>
 

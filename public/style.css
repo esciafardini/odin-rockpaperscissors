@@ -1,14 +1,81 @@
-*
-{
-  font-family: 'Roboto Condensed', sans-serif;
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: 'VT323', monospace;
+  background-color: #89CFF0;
 }
 
-.container
+.main-ctx
+{
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left-ctx
+{
+  text-align: center;
+  flex: 2;
+}
+
+.center-ctx
+{
+  flex: 5;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.right-ctx
+{
+  flex: 2;
+  text-align: center;
+}
+
+
+.title, .ui-message
+{
+  text-align: center;
+}
+
+.ui-message
+{
+  margin-top: 4rem;
+}
+
+.score-display
 {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4rem;
+  justify-content: space-between;
+  font-size: 1.5rem;
+}
+
+.score-box
+{
+  margin: .5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+#computer-score
+{
+  margin-left: 1rem;
+}
+
+#user-score
+{
+  margin-left: 1rem;
+}
+
+.score-box
+{
+  display: flex;
+  flex-direction: row;
 }
 
 button

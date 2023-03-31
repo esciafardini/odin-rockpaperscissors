@@ -9,7 +9,4 @@
  :builds
  {:rps
   {:target :browser
-   :modules {:main {:init-fn rps.core/init}}
-   :devtools {:preloads [devtools.preload]
-              :http-root "resources/public"
-              :http-port 3019}}}}
+   :modules {:main {:init-fn rps.core/init}}}}}
