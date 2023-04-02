@@ -56,27 +56,31 @@
   (set! (.. (get-element-by-id "player-img") -src) (str "public/" (name player-selection) ".png"))
   (and div-id (set-text-content! div-id score)))
 
-(defn game-over [winner-div]
+(defn game-over! [winner-div]
   (doseq [button-element (.querySelectorAll js/document "button")]
     (set! (.. button-element -disabled) true)
     (set! (.. button-element -style -visibility) "hidden"))
   (set-text-content! "ui-message" (if (= winner-div "player-score") "YOU WIN" "YOU LOSE")))
 
-(defn victory-fx [computer-selection player-selection score div-id]
+(defn victory-fx! [computer-selection player-selection score div-id]
   (and score (swap! score inc))
   (if (= @score 5)
     (do
       (set-text-and-images! computer-selection player-selection @score div-id)
-      (game-over div-id))
+      (game-over! div-id))
     (set-text-and-images! computer-selection player-selection @score div-id)))
 
-(doseq [button-type ["rock" "paper" "scissors"]]
-  (.addEventListener (get-element-by-id button-type) "click"
-                     #(let [{:keys [player-selection computer-selection ui-message winner]} (play-round (keyword button-type) (get-computer-choice!))]
-                        (set-text-content! "ui-message" ui-message)
-                        (case winner
-                          :computer (victory-fx computer-selection player-selection computer-score "computer-score")
-                          :player (victory-fx computer-selection player-selection player-score "player-score")
-                          (victory-fx computer-selection player-selection (atom nil) nil)))))
+(defn initialize! []
+  (doseq [button-type ["rock" "paper" "scissors"]]
+    (.addEventListener (get-element-by-id button-type) "click"
+                       #(let [{:keys [player-selection computer-selection ui-message winner]} (play-round (keyword button-type) (get-computer-choice!))]
+                          (set-text-content! "ui-message" ui-message)
+                          (case winner
+                            :computer (victory-fx! computer-selection player-selection computer-score "computer-score")
+                            :player (victory-fx! computer-selection player-selection player-score "player-score")
+                            (victory-fx! computer-selection player-selection (atom nil) nil))))))
 
-(defn init [])
+(defn init []
+  (initialize!))
+
+(init)
