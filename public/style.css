@@ -26,7 +26,6 @@ html, body {
 
 .right-ctx, .left-ctx
 {
-  visibility: hidden;
   flex: 2;
   display: flex;
   flex-direction: column;
