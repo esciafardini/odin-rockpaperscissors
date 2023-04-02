@@ -79,13 +79,13 @@
   (and score (swap! score inc))
   (if (and score (= @score 5))
     (do
-      (set! (.. (get-element-by-id "computer-img") -src) (str (name computer) ".png"))
-      (set! (.. (get-element-by-id "player-img") -src) (str (name player) ".png"))
+      (set! (.. (get-element-by-id "computer-img") -src) (str "public/" (name computer) ".png"))
+      (set! (.. (get-element-by-id "player-img") -src) (str "public/" (name player) ".png"))
       (set-text-content! div-id @score)
       (game-over div-id))
     (do
-      (set! (.. (get-element-by-id "computer-img") -src) (str (name computer) ".png"))
-      (set! (.. (get-element-by-id "player-img") -src) (str (name player) ".png"))
+      (set! (.. (get-element-by-id "computer-img") -src) (str "public/" (name computer) ".png"))
+      (set! (.. (get-element-by-id "player-img") -src) (str "public/" (name player) ".png"))
       (and div-id (set-text-content! div-id @score)))))
 
 (def button-types ["rock" "paper" "scissors"])
