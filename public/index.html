@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <title></title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+
+  <div class="main-ctx">
+
+    <div id="player-selection" class="left-ctx">
+      <img id="player-img" src="rock.png" width="50%" height="50%">
+      <div>
+        Player
+      </div>
+    </div>
+
+    <div class="center-ctx">
+
+      <div>
+        <h1 class="title">ROCK PAPER SCISSORS</h1>
+        <div id="ui-message" class="ui-message">
+          you already know what it is
+        </div>
+
+      </div>
+
+      <div class="score-display">
+        <div class="score-box">
+          <div>Computer:</div>
+          <div id="computer-score">0</div>
+        </div>
+        <div class="score-box">
+          <div>Player:</div>
+          <div id="player-score">0</div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button id="rock" type="button">Rock</button>
+        <button id="paper" type="button">Paper</button>
+        <button id="scissors" type="button">Scissors</button>
+      </div>
+
+      <div class="game-over" id="game-over-message"></div>
+
+    </div>
+
+
+    <div id="computer-selection" class="right-ctx">
+      <img id="computer-img" src="paper.png" width="50%" height="50%">
+      <div>
+        Computer
+      </div>
+    </div>
+
+  </div>
+
+  <!-- This is one way (the best way) to add js to an HTML file -->
+  <script src="/js/main.js"></script>
+</body>
+
+</html>
