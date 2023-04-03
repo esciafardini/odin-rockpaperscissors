@@ -71,13 +71,12 @@
       (game-over! div-id))
     (set-text-and-images! computer-selection player-selection @score div-id)))
 
-(doseq [button-type ["rock" "paper" "scissors"]]
-  (.addEventListener (get-element-by-id button-type) "click"
-                     #(let [{:keys [player-selection computer-selection ui-message winner]} (play-round (keyword button-type) (get-computer-choice!))]
-                        (set-text-content! "ui-message" ui-message)
-                        (case winner
-                          :computer (victory-fx! computer-selection player-selection computer-score "computer-score")
-                          :player (victory-fx! computer-selection player-selection player-score "player-score")
-                          (victory-fx! computer-selection player-selection (atom nil) nil)))))
-
-(defn init [])
+(defn init []
+  (doseq [button-type ["rock" "paper" "scissors"]]
+    (.addEventListener (get-element-by-id button-type) "click"
+                       #(let [{:keys [player-selection computer-selection ui-message winner]} (play-round (keyword button-type) (get-computer-choice!))]
+                          (set-text-content! "ui-message" ui-message)
+                          (case winner
+                            :computer (victory-fx! computer-selection player-selection computer-score "computer-score")
+                            :player (victory-fx! computer-selection player-selection player-score "player-score")
+                            (victory-fx! computer-selection player-selection (atom nil) nil))))))
