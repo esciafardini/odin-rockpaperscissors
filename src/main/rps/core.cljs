@@ -41,7 +41,6 @@
 (defn play-round [player-selection computer-selection]
   (let [rps-selection-map {:player-selection player-selection
                            :computer-selection computer-selection}]
-
     (if (= computer-selection player-selection)
       (determine-winner rps-selection-map)
       (determine-winner (merge rps-selection-map {player-selection :player ;inverting for lookup (if winner = scissors, who won?)
@@ -52,8 +51,8 @@
     (get computer-choices n)))
 
 (defn set-text-and-images! [computer-selection player-selection score div-id]
-  (set! (.. (get-element-by-id "computer-img") -src) (str "public/" (name computer-selection) ".png"))
-  (set! (.. (get-element-by-id "player-img") -src) (str "public/" (name player-selection) ".png"))
+  (set! (.. (get-element-by-id "computer-img") -src) (str (name computer-selection) ".png"))
+  (set! (.. (get-element-by-id "player-img") -src) (str (name player-selection) ".png"))
   (and div-id (set-text-content! div-id score)))
 
 (defn game-over! [winner-div]
@@ -70,17 +69,13 @@
       (game-over! div-id))
     (set-text-and-images! computer-selection player-selection @score div-id)))
 
-(defn initialize! []
-  (doseq [button-type ["rock" "paper" "scissors"]]
-    (.addEventListener (get-element-by-id button-type) "click"
-                       #(let [{:keys [player-selection computer-selection ui-message winner]} (play-round (keyword button-type) (get-computer-choice!))]
-                          (set-text-content! "ui-message" ui-message)
-                          (case winner
-                            :computer (victory-fx! computer-selection player-selection computer-score "computer-score")
-                            :player (victory-fx! computer-selection player-selection player-score "player-score")
-                            (victory-fx! computer-selection player-selection (atom nil) nil))))))
+(doseq [button-type ["rock" "paper" "scissors"]]
+  (.addEventListener (get-element-by-id button-type) "click"
+                     #(let [{:keys [player-selection computer-selection ui-message winner]} (play-round (keyword button-type) (get-computer-choice!))]
+                        (set-text-content! "ui-message" ui-message)
+                        (case winner
+                          :computer (victory-fx! computer-selection player-selection computer-score "computer-score")
+                          :player (victory-fx! computer-selection player-selection player-score "player-score")
+                          (victory-fx! computer-selection player-selection (atom nil) nil)))))
 
-(defn init []
-  (initialize!))
-
-(init)
+(defn init [])
