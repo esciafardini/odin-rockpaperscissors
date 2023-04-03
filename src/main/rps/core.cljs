@@ -16,13 +16,13 @@
    :scissors "Scissors beats paper"
    :tie "Tie game"})
 
-(defn return-game-info [winner rps-selection-map]
-  (merge rps-selection-map {:winner (get rps-selection-map winner)
-                            :ui-message (get ui-messages winner)}))
+(defn return-game-info
+  "At this fn call, rps-selection-map contains a lookup for winner"
+  [winning-selection rps-selection-map]
+  (merge rps-selection-map {:winner (get rps-selection-map winning-selection)
+                            :ui-message (get ui-messages winning-selection)}))
 
 (defn determine-winner
-  "If there is a winner, a map will be returned.
-   Otherwise, a keyword that signifies tie game (:tie)"
   [rps-selection-map]
   (let [choices (set (vals (select-keys rps-selection-map [:player-selection :computer-selection])))]
     (cond->> rps-selection-map
@@ -38,12 +38,14 @@
       (= choices #{:scissors :paper})
       (return-game-info :scissors))))
 
-(defn play-round [player-selection computer-selection]
+(defn play-round
+  "If not a tie game, enhance rps-selection-map with a lookup for winner based on selection"
+  [player-selection computer-selection]
   (let [rps-selection-map {:player-selection player-selection
                            :computer-selection computer-selection}]
     (if (= computer-selection player-selection)
       (determine-winner rps-selection-map)
-      (determine-winner (merge rps-selection-map {player-selection :player ;inverting for lookup (if winner = scissors, who won?)
+      (determine-winner (merge rps-selection-map {player-selection :player
                                                   computer-selection :computer})))))
 
 (defn get-computer-choice! []
