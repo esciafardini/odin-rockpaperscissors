@@ -8,3 +8,7 @@
 (defn set-text-content! [div-id text-content]
   (let [div (get-element-by-id div-id)]
     (set! (.. div -textContent) text-content)))
+
+(defn set-img-src! [div-id text]
+  (let [div (get-element-by-id div-id)]
+    (set! (.. div -src) text)))

@@ -1,6 +1,6 @@
 (ns rps.core
   (:require
-   [rps.js-helpers :refer [console-log get-element-by-id set-text-content!]]))
+   [rps.js-helpers :refer [console-log get-element-by-id set-img-src! set-text-content!]]))
 
 (def player-score (atom 0))
 (def computer-score (atom 0))
@@ -26,17 +26,10 @@
   [rps-selection-map]
   (let [choices (set (vals (select-keys rps-selection-map [:player-selection :computer-selection])))]
     (cond->> rps-selection-map
-      (= (count choices) 1)
-      (return-game-info :tie)
-
-      (= choices #{:rock :paper})
-      (return-game-info :paper)
-
-      (= choices #{:rock :scissors})
-      (return-game-info :rock)
-
-      (= choices #{:scissors :paper})
-      (return-game-info :scissors))))
+      (= (count choices) 1) (return-game-info :tie)
+      (= choices #{:rock :paper}) (return-game-info :paper)
+      (= choices #{:rock :scissors}) (return-game-info :rock)
+      (= choices #{:scissors :paper}) (return-game-info :scissors))))
 
 (defn play-round
   "If not a tie game, enhance rps-selection-map with a lookup for winner based on selection"
@@ -53,8 +46,8 @@
     (get computer-choices n)))
 
 (defn set-text-and-images! [computer-selection player-selection score div-id]
-  (set! (.. (get-element-by-id "computer-img") -src) (str (name computer-selection) ".png"))
-  (set! (.. (get-element-by-id "player-img") -src) (str (name player-selection) ".png"))
+  (set-img-src! "computer-img" (str (name computer-selection) ".png"))
+  (set-img-src! "player-img" (str (name player-selection) ".png"))
   (and div-id (set-text-content! div-id score)))
 
 (defn game-over! [winner-div]
