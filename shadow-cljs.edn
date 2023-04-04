@@ -4,9 +4,10 @@
  :dependencies [[cider/cider-nrepl "0.21.0"]
                 [binaryage/devtools "1.0.2"]]
 
- :dev-http {8880 "public"}
+ :dev-http {8880 "."}
 
  :builds
  {:rps
   {:target :browser
+   :output-dir "public/js"
    :modules {:main {:init-fn rps.core/init}}}}}

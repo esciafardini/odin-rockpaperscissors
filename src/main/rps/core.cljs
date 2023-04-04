@@ -46,8 +46,8 @@
     (get computer-choices n)))
 
 (defn set-text-and-images! [computer-selection player-selection score div-id]
-  (set-img-src! "computer-img" (str (name computer-selection) ".png"))
-  (set-img-src! "player-img" (str (name player-selection) ".png"))
+  (set-img-src! "computer-img" (str "public/" (name computer-selection) ".png"))
+  (set-img-src! "player-img" (str "public/" (name player-selection) ".png"))
   (and div-id (set-text-content! div-id score)))
 
 (defn game-over! [winner-div]
